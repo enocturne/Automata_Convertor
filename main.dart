@@ -26,55 +26,32 @@ void main(List<String> arguments) async {
 }
 
 class FiniteAutomata {
-  List<String> Q = ['q0', 'q1']; //Collection of states.
-  List<String> T = ['0', '1']; //Collection of inputs.
-  Map<String, List<String>> transfunc = {
-    'q00': ['q1'],
-    'q01': ['q1'],
-    'q10': ['q1'],
-    'q11': ['q1'],
-  }; //Transform functions.
+  List Q = []; //Collection of states.
+  List T = []; //Collection of inputs.
+  List transfunc = []; //Transform functions.
   String q0 = 'q0'; //Initial state.
-  List<String> F = ['q1']; //Collection of ending states.
+  List F = []; //Collection of ending states.
 }
 
 class NFA extends FiniteAutomata {
   NFA(List<String> content) {
-    Q = content[0].split(';');
-    T = content[1].split(';');
-    List<String> temp = content[2].split(';');
-    q0 = temp[0];
-    F = temp.sublist(1);
-    for (int i = 3; i < content.length; i++) {
-      temp = content[i].split(';');
-      transfunc[temp[0] + temp[1]] = temp.sublist(2);
-    }
-  }
-}
-
-class DFA extends FiniteAutomata {
-  DFA(NFA iptauto) {
-    Q = iptauto.Q;
-    T = iptauto.T;
-    q0 = iptauto.q0;
-    F = iptauto.F;
-    transfunc = iptauto.transfunc;
-    bool trigger = false;
-    do {
-      transfunc.forEach((key, value) {
-        if (value.length > 1) {
-          trigger = true;
-          int count = 0;
-          value.forEach((element) {
-            if (F.contains(element)) {
-              count++;
-            }
-          });
-          if (count == value.length) {
-            F.add(value.join(','));
-          }
-        }
+    Q = content[0].split(','); //read Q.
+    T = content[1].split(','); //read T.
+    T.forEach((_) => transfunc.add(List.generate(
+        Q.length,
+        (_) => List.generate(Q.length,
+            (_) => 0)))); //generate the matrixes of transform functions.
+    List temp = content[2].split(','); //a temporary list。
+    q0 = temp[0]; //read q0.
+    F = temp.sublist(1); //read F.
+    var j = 0; //column pointer.
+    content.sublist(3).forEach((column) {
+      temp.clear();
+      column.split(',').forEach((element) {
+        temp.add(int.parse(element));
       });
-    } while (trigger);
+      transfunc[j ~/ Q.length][j % Q.length] = temp;
+      j++;
+    });
   }
 }
