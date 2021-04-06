@@ -8,7 +8,7 @@ An NFA to DFA convertor written in dart.
 
 # Index Tree
 
-![image-20210406181017737](C:\Users\DELL\AppData\Roaming\Typora\typora-user-images\image-20210406181017737.png)
+![image-20210406181949224](C:\Users\DELL\AppData\Roaming\Typora\typora-user-images\image-20210406181949224.png)
 
 
 
